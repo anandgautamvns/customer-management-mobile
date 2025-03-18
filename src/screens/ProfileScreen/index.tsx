@@ -6,11 +6,10 @@ import { useAppDispatch, useAppSelector } from '../../redux/store';
 import { actions, selectors } from '../../redux/rootReducer';
 import { FormItem } from '../RegistrationScreen/type';
 import { displayErrorMessage } from '../../dataService/error';
-import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../navigation/AppNavigator';
+import { StackNavigationProp } from '@react-navigation/stack';
 
-type RegistrationScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Profile'>;
-
+type RegistrationScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
 type Props = {
   navigation: RegistrationScreenNavigationProp;
 };

@@ -1,0 +1,7 @@
+version: "3.9"
+services:
+  expo:
+    build: .
+    environment:
+      EXPO_USERNAME: ${EXPO_USERNAME}
+      EXPO_PASSWORD: ${EXPO_PASSWORD}

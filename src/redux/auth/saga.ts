@@ -1,6 +1,6 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getProfile, loginUser, logoutUser, registrationUser, updateProfile } from '../../dataService/api';
+import { getProfile, loginUser, logoutUser, registrationUser, updateProfile } from '../../dataService/authApi';
 
 import {
   loginPending,
@@ -23,13 +23,14 @@ import {
   getProfilePending,
 } from '../auth/reducer';
 import { LoginPending, LogoutResponse, RegistrationPending, RegistrationResponse, UpdateProfilePending, User } from './type';
-import { APIResponse } from '../type';
 
 export function* handleLogin(action: LoginPending) {
   try {
+    const expiryTime = new Date().getTime() + 30*60*1000;
     const response: RegistrationResponse = yield call(loginUser, action.payload);
     const { user, token } = response;
     yield call(AsyncStorage.setItem, 'token', token);
+    yield call(AsyncStorage.setItem, 'expiryTime', expiryTime.toString());
     yield put(loginSuccess({ user, token }));
   } catch (error: any) {
     yield put(loginFailure(error));
