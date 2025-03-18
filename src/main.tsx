@@ -11,7 +11,7 @@ type RegistrationScreenNavigationProp = StackNavigationProp<RootStackParamList, 
 const Main: React.FC = () => {
   const dispatch = useAppDispatch()
   const { token } = useAppSelector(selectors.selectAuth)
-  const navigation = useNavigation<RegistrationScreenNavigationProp>()
+  // const navigation = useNavigation<RegistrationScreenNavigationProp>()
 
   useEffect(() => {
     dispatch(actions.auth.checkAuthPending());
@@ -31,7 +31,7 @@ const Main: React.FC = () => {
   const checkSession = async () => {
     const expired = await isSessionExpired();
     if (expired) {
-      navigation.navigate('Login')
+      // navigation.navigate('Login')
       await AsyncStorage.removeItem('token');
     }
   };
