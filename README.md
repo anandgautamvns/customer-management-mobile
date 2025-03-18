@@ -31,7 +31,7 @@ Customer-management-mobile/
   Docker (if using Docker)
   Android Studio (for Android Emulator)
   Xcode (for iOS Simulator on macOS)
-  
+
 
 **Installation & Setup**
   *Clone the Repository*
@@ -64,3 +64,44 @@ Using Docker Compose:
 Or run the Docker image directly (if using build-time credentials or if you’re providing credentials via environment variables):
 
   docker run --rm -e EXPO_USERNAME=your_expo_username -e EXPO_PASSWORD=your_expo_password my-expo-app
+
+🌍 Publishing the App to Expo
+  Expo allows you to publish the app and share it easily.
+
+1️⃣ Ensure You're Logged In
+  expo login
+
+2️⃣ Publish the App\
+  expo publish
+
+This will generate a public Expo URL where users can access the latest version of your app.
+
+🔄 Updating Dependencies
+To keep dependencies updated:
+  yarn update
+If new dependencies are added, update package.json and lock file:
+  yarn install
+
+🛠 Environment Variables
+Use a .env file (ignored via .gitignore) to store sensitive credentials:
+  EXPO_USERNAME=your_expo_username
+  EXPO_PASSWORD=your_expo_password
+
+To use these in your app, install react-native-dotenv:
+  yarn add react-native-dotenv
+
+Then, import it in your app:
+import { EXPO_USERNAME } from '@env';
+📡 API Configuration
+ If your app fetches data from an API, store the base URL in config.js:
+ export const API_BASE_URL = 'https://api.example.com';
+
+Use it in components:
+import { API_BASE_URL } from '../config';
+
+🧪 Testing
+Run tests using:
+
+npm test
+To use Jest with React Native, install:
+yarn add  jest @testing-library/react-native --save-dev
