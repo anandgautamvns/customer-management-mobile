@@ -26,7 +26,7 @@ const {
 
 export function* createCustomer(action: CreateCustomerPending) {
   try {
-    const response: CustomerEntity = yield call(createCustomerApi, action.payload);
+    const response: CustomerEntity =  yield call(createCustomerApi, action.payload);
     yield put(createCustomerSuccess(response));
   } catch (error: any) {
     yield put(createCustomerFailure(error));

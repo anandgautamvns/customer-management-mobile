@@ -5,6 +5,10 @@ import LoginScreen from '../screens/LoginScreen';
 import RegistrationScreen from '../screens/RegistrationScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import CustomerScreen from '../screens/customerScreen';
+import { useAppDispatch } from '../redux/store';
+import { actions } from '../redux/rootReducer';
+import { useNavigation } from '@react-navigation/native';
+import { Button, IconButton, MD3Colors, Checkbox, PaperProvider, MD2Colors } from 'react-native-paper';
 
 export type RootStackParamList = {
   Login: undefined;
@@ -24,12 +28,30 @@ type AppNavigatorProps = {
 };
 
 const AppNavigator: React.FC<AppNavigatorProps> = ({ isAuthenticated }) => {
+  const dispatch = useAppDispatch()
+  const navigation = useNavigation()
+  const handleLogout = async () => {
+    await dispatch(actions.auth.logoutPending())
+    navigation.navigate('Login')
+  }
   return (
     <>
       {isAuthenticated ? (
         <BottomTab.Navigator>
-          <BottomTab.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profile' }} />
-          <BottomTab.Screen name="Customer" component={CustomerScreen} options={{ title: 'Customer' }} />
+          <BottomTab.Screen name="Profile" component={ProfileScreen} options={{
+            title: 'Profile', headerRight: () => (
+              <Button icon="account" mode="contained" onPress={handleLogout}>
+                Logout
+              </Button>
+            ),
+          }} />
+          <BottomTab.Screen name="Customer" component={CustomerScreen} options={{
+            title: 'Customer', headerRight: () => (
+              <Button icon="account" mode="contained" onPress={handleLogout}>
+                Logout
+              </Button>
+            ),
+          }} />
         </BottomTab.Navigator>
       ) : (
         <Stack.Navigator>

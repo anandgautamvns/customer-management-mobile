@@ -14,7 +14,7 @@ export const createCustomerApi = async (request: Omit<CreateCustomerRequest, 'id
 export const getCustomerApi = async (request: CustomerRequest) => {
   const params = request
   try {
-    const response: APIResponse<CustomerResponse> = await axiosAPI.get('customers', {
+    const response: APIResponse<CustomerResponse> = await axiosAPI.get('customers/', {
       params: request
     });
     return response.data;
@@ -25,7 +25,7 @@ export const getCustomerApi = async (request: CustomerRequest) => {
 
 export const getCustomerByIdApi = async (request: { id: string }) => {
   try {
-    const response: APIResponse<CustomerEntity> = await axiosAPI.get(`customer/${request.id}`);
+    const response: APIResponse<CustomerEntity> = await axiosAPI.get(`customer/${request.id}/`);
     return response.data;
   } catch (error: any) {
     throw error;
@@ -34,7 +34,7 @@ export const getCustomerByIdApi = async (request: { id: string }) => {
 
 export const updateCustomerApi = async (request: CreateCustomerRequest) => {
   try {
-    const response: APIResponse<CustomerEntity> = await axiosAPI.patch(`customer/${request.id}`, request);
+    const response: APIResponse<CustomerEntity> = await axiosAPI.patch(`customer/${request.id}/`, request);
     return response.data;
   } catch (error: any) {
     throw error;
