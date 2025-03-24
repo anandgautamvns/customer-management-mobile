@@ -1,10 +1,20 @@
-import { CreateCustomerRequest, CustomerEntity, CustomerRequest, CustomerResponse } from "../redux/customer/type";
-import { APIResponse } from "../redux/type";
+import {
+  CreateCustomerRequest,
+  CustomerEntity,
+  CustomerRequest,
+  CustomerResponse,
+} from "../redux-toolkit/customer/type";
+import { APIResponse } from "../redux-toolkit/type";
 import { axiosAPI } from "./api";
 
-export const createCustomerApi = async (request: Omit<CreateCustomerRequest, 'id'>) => {
+export const createCustomerApi = async (
+  request: Omit<CreateCustomerRequest, "id">
+) => {
   try {
-    const response: APIResponse<CustomerEntity> = await axiosAPI.post('customers/', request);
+    const response: APIResponse<CustomerEntity> = await axiosAPI.post(
+      "customers/",
+      request
+    );
     return response.data;
   } catch (error: any) {
     throw error;
@@ -12,11 +22,14 @@ export const createCustomerApi = async (request: Omit<CreateCustomerRequest, 'id
 };
 
 export const getCustomerApi = async (request: CustomerRequest) => {
-  const params = request
+  const params = request;
   try {
-    const response: APIResponse<CustomerResponse> = await axiosAPI.get('customers/', {
-      params: request
-    });
+    const response: APIResponse<CustomerResponse> = await axiosAPI.get(
+      "customers/",
+      {
+        params: request,
+      }
+    );
     return response.data;
   } catch (error: any) {
     throw error;
@@ -25,7 +38,9 @@ export const getCustomerApi = async (request: CustomerRequest) => {
 
 export const getCustomerByIdApi = async (request: { id: string }) => {
   try {
-    const response: APIResponse<CustomerEntity> = await axiosAPI.get(`customer/${request.id}/`);
+    const response: APIResponse<CustomerEntity> = await axiosAPI.get(
+      `customer/${request.id}/`
+    );
     return response.data;
   } catch (error: any) {
     throw error;
@@ -34,7 +49,10 @@ export const getCustomerByIdApi = async (request: { id: string }) => {
 
 export const updateCustomerApi = async (request: CreateCustomerRequest) => {
   try {
-    const response: APIResponse<CustomerEntity> = await axiosAPI.patch(`customer/${request.id}/`, request);
+    const response: APIResponse<CustomerEntity> = await axiosAPI.patch(
+      `customer/${request.id}/`,
+      request
+    );
     return response.data;
   } catch (error: any) {
     throw error;
@@ -43,7 +61,9 @@ export const updateCustomerApi = async (request: CreateCustomerRequest) => {
 
 export const deleteCustomerApi = async (request: { id: string }) => {
   try {
-    const response: APIResponse<CustomerEntity> = await axiosAPI.delete(`customer/${request.id}`);
+    const response: APIResponse<CustomerEntity> = await axiosAPI.delete(
+      `customer/${request.id}`
+    );
     return response.data;
   } catch (error: any) {
     throw error;
@@ -52,7 +72,9 @@ export const deleteCustomerApi = async (request: { id: string }) => {
 
 export const deleteAllCustomerApi = async () => {
   try {
-    const response: APIResponse<CustomerEntity> = await axiosAPI.delete('customers/deleteAll/');
+    const response: APIResponse<CustomerEntity> = await axiosAPI.delete(
+      "customers/deleteAll/"
+    );
     return response.data;
   } catch (error: any) {
     throw error;

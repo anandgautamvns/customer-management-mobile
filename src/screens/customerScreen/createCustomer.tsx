@@ -7,10 +7,10 @@ import { ActivityIndicator, Button, MD2Colors } from "react-native-paper";
 import RNPickerSelect from "react-native-picker-select";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { displayErrorMessage } from "../../dataService/error";
-import { Gender } from "../../redux/customer/enum";
-import { CustomerEntity } from "../../redux/customer/type";
-import { actions, selectors } from "../../redux/rootReducer";
-import { useAppDispatch, useAppSelector } from "../../redux/store";
+import { Gender } from "../../redux-toolkit/customer/enum";
+import { CustomerEntity } from "../../redux-toolkit/customer/type";
+import { actions, selectors } from "../../redux-toolkit/rootReducer";
+import { useAppDispatch, useAppSelector } from "../../redux-toolkit/store";
 import { defaultCustomerEntity } from "./constant";
 
 interface Props {
@@ -102,11 +102,10 @@ const CreateCustomer: React.FC<Props> = (props) => {
             <Text style={styles.title}>{`${
               isEdit ? "Update" : "Create"
             } Customer`}</Text>
-            {error && (
-              <Text style={styles.displayErrorText}>
-                {displayErrorMessage(error) ?? ""}
-              </Text>
-            )}
+            <Text style={styles.displayErrorText}>
+              {error ? displayErrorMessage(error) : ""}
+            </Text>
+
             {loading ? (
               <View style={styles.container}>
                 <ActivityIndicator

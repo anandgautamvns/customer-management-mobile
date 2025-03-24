@@ -10,9 +10,13 @@ import {
 import { Formik } from "formik";
 import { Button } from "react-native-paper";
 import CustomCard from "../../components/Card";
+import {
+  getProfileAction,
+  updateProfileAction,
+} from "../../dataService/authApi";
 import { displayErrorMessage } from "../../dataService/error";
-import { actions, selectors } from "../../redux/rootReducer";
-import { useAppDispatch, useAppSelector } from "../../redux/store";
+import { selectors } from "../../redux-toolkit/rootReducer";
+import { useAppDispatch, useAppSelector } from "../../redux-toolkit/store";
 import { FormItem } from "../RegistrationScreen/type";
 
 interface Props {}
@@ -30,7 +34,7 @@ const ProfileScreen: React.FC<Props> = (props) => {
   });
 
   useEffect(() => {
-    dispatch(actions.auth.getProfilePending());
+    dispatch(getProfileAction());
   }, []);
 
   useEffect(() => {
@@ -47,15 +51,12 @@ const ProfileScreen: React.FC<Props> = (props) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Profile</Text>
       <View style={styles.detailsContainer}>
         {isEdit ? (
           <View>
-            {error && (
-              <Text style={styles.displayErrorText}>
-                {displayErrorMessage(error) ?? ""}
-              </Text>
-            )}
+            <Text style={styles.displayErrorText}>
+              {error ? displayErrorMessage(error) : ""}
+            </Text>
             <Formik
               initialValues={{
                 username: formItem.username,
@@ -64,11 +65,14 @@ const ProfileScreen: React.FC<Props> = (props) => {
                 last_name: formItem.last_name,
               }}
               onSubmit={async (values) => {
-                await dispatch(actions.auth.updateProfileRequest(values));
-                setTimeout(() => {
-                  dispatch(actions.auth.getProfilePending());
-                  setEdit(false);
-                }, 500);
+                dispatch(updateProfileAction(values))
+                  .then(async (response) => {
+                    await dispatch(getProfileAction());
+                    setEdit(false);
+                  })
+                  .catch((error) => {
+                    console.log("error", error);
+                  });
               }}
               validate={(values) => {
                 setFormItem(values);

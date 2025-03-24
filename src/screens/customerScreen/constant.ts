@@ -1,5 +1,8 @@
 import { PAGE_NUMBER, PAGE_SIZE } from "../../constant";
-import { CustomerEntity, CustomerRequest } from "../../redux/customer/type";
+import {
+  CustomerEntity,
+  CustomerRequest,
+} from "../../redux-toolkit/customer/type";
 
 export const defaultCustomerRequest: CustomerRequest = {
   search: '',

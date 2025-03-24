@@ -16,9 +16,12 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ScrollView } from "react-native-gesture-handler";
 import CustomCard from "../../components/Card";
 import ListComponent from "../../components/ListComponent";
-import { CustomerEntity, CustomerRequest } from "../../redux/customer/type";
-import { actions, selectors } from "../../redux/rootReducer";
-import { useAppDispatch, useAppSelector } from "../../redux/store";
+import {
+  CustomerEntity,
+  CustomerRequest,
+} from "../../redux-toolkit/customer/type";
+import { actions, selectors } from "../../redux-toolkit/rootReducer";
+import { useAppDispatch, useAppSelector } from "../../redux-toolkit/store";
 import { defaultCustomerRequest } from "./constant";
 import CreateCustomer from "./createCustomer";
 

@@ -9,10 +9,11 @@ import {
 } from "react-native";
 
 import { Formik } from "formik";
-import { actions, selectors } from "../../redux/rootReducer";
-import { useAppDispatch, useAppSelector } from "../../redux/store";
+import { selectors } from "../../redux-toolkit/rootReducer";
+import { useAppDispatch, useAppSelector } from "../../redux-toolkit/store";
 
 import { useNavigation } from "@react-navigation/native";
+import { registrationAction } from "../../dataService/authApi";
 import { displayErrorMessage } from "../../dataService/error";
 import { SCREEN } from "../../navigation/enum";
 import { FormItem } from "./type";
@@ -22,7 +23,7 @@ interface Props {}
 const RegistrationScreen: React.FC<Props> = (props) => {
   const navigation = useNavigation<any>();
   const dispatch = useAppDispatch();
-  const { loading, error } = useAppSelector(selectors.selectAuth);
+  const { loading, error, user, token } = useAppSelector(selectors.selectAuth);
   const [formItem, setFormItem] = useState<FormItem>({
     username: "",
     email: "",
@@ -35,11 +36,9 @@ const RegistrationScreen: React.FC<Props> = (props) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Registration</Text>
-      {error && (
-        <Text style={styles.displayErrorText}>
-          {displayErrorMessage(error) ?? ""}
-        </Text>
-      )}
+      <Text style={styles.displayErrorText}>
+        {error ? displayErrorMessage(error) : ""}
+      </Text>
       <Formik
         initialValues={{
           username: "",
@@ -49,13 +48,15 @@ const RegistrationScreen: React.FC<Props> = (props) => {
           password: "",
           confirm_password: "",
         }}
-        onSubmit={async (values) => {
-          await dispatch(actions.auth.registrationPending(values));
-          setTimeout(() => {
-            navigation.navigate(SCREEN.LOGIN, {
-              screen: SCREEN.REGISTRATION,
+        onSubmit={(values) => {
+          dispatch(registrationAction(values))
+            .then((response) => {
+              console.log("response", response);
+              navigation.navigate(SCREEN.LOGIN);
+            })
+            .catch((error) => {
+              console.log("error", error);
             });
-          }, 500);
         }}
         validate={(values) => {
           setFormItem(values);
@@ -171,11 +172,7 @@ const RegistrationScreen: React.FC<Props> = (props) => {
             <View style={styles.button}>
               <Button
                 title="Already have an account? Login"
-                onPress={() =>
-                  navigation.navigate(SCREEN.LOGIN, {
-                    screen: SCREEN.REGISTRATION,
-                  })
-                }
+                onPress={() => navigation.navigate(SCREEN.LOGIN)}
               />
             </View>
           </View>

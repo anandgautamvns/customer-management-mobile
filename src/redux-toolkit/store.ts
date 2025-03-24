@@ -4,7 +4,6 @@ import logger from "redux-logger";
 import createSagaMiddleware, { Middleware } from "redux-saga";
 import promiseMiddleware from "./redux-promise";
 import { reducers } from "./rootReducer";
-import rootSaga from "./rootSaga";
 
 const sagaMiddleware = createSagaMiddleware();
 const middleware: Middleware[] = [sagaMiddleware, promiseMiddleware];
@@ -16,11 +15,9 @@ if (process.env.NODE_ENV === "development") {
 const store = configureStore({
   devTools: false,
   reducer: reducers,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({ thunk: false }).concat(middleware),
 });
 
-sagaMiddleware.run(rootSaga);
+// sagaMiddleware.run(rootSaga);
 
 export type AppState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

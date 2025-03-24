@@ -5,6 +5,7 @@ import { SCREEN } from "./enum";
 export type RootStackParamList = {
   Login: undefined;
   Registration: undefined;
+  Home: undefined;
 };
 
 export type RootBottomTabParamList = {

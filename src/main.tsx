@@ -2,8 +2,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
 import React, { useEffect } from "react";
 import AppNavigator from "./navigation/AppNavigator";
-import { actions, selectors } from "./redux/rootReducer";
-import { useAppDispatch, useAppSelector } from "./redux/store";
+import { actions, selectors } from "./redux-toolkit/rootReducer";
+import { useAppDispatch, useAppSelector } from "./redux-toolkit/store";
 
 const Main: React.FC = () => {
   const dispatch = useAppDispatch();
