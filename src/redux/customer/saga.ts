@@ -1,17 +1,32 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
-import { CreateCustomerPending, CustomerEntity, CustomerResponse, DeleteCustomerPending, GetCustomerByIdPending, GetCustomerPending, UpdateCustomerPending } from './type';
-import { createCustomerApi, deleteAllCustomerApi, deleteCustomerApi, getCustomerApi, getCustomerByIdApi, updateCustomerApi } from '../../dataService/customerApi';
-import { actions } from '../rootReducer';
+import { call, put, takeLatest } from "redux-saga/effects";
+import {
+  createCustomerApi,
+  deleteAllCustomerApi,
+  deleteCustomerApi,
+  getCustomerApi,
+  getCustomerByIdApi,
+  updateCustomerApi,
+} from "../../dataService/customerApi";
+import { actions } from "../rootReducer";
+import {
+  CreateCustomerPending,
+  CustomerEntity,
+  CustomerResponse,
+  DeleteCustomerPending,
+  GetCustomerByIdPending,
+  GetCustomerPending,
+  UpdateCustomerPending,
+} from "./type";
 
 const {
   createCustomerPending,
   createCustomerSuccess,
-  createCustomerFailure, 
-  getCustomerSuccess, 
+  createCustomerFailure,
+  getCustomerSuccess,
   getCustomerPending,
   getCustomerFailure,
-  getCustomerByIdPending, 
-  getCustomerByIdSuccess, 
+  getCustomerByIdPending,
+  getCustomerByIdSuccess,
   getCustomerByIdFailure,
   updateCustomerPending,
   updateCustomerSuccess,
@@ -21,12 +36,15 @@ const {
   deleteCustomerFailure,
   deleteAllCustomerPending,
   deleteAllCustomerSuccess,
-  deleteAllCustomerFailure
-} = actions.customer
+  deleteAllCustomerFailure,
+} = actions.customer;
 
 export function* createCustomer(action: CreateCustomerPending) {
   try {
-    const response: CustomerEntity =  yield call(createCustomerApi, action.payload);
+    const response: CustomerEntity = yield call(
+      createCustomerApi,
+      action.payload
+    );
     yield put(createCustomerSuccess(response));
   } catch (error: any) {
     yield put(createCustomerFailure(error));
@@ -35,7 +53,10 @@ export function* createCustomer(action: CreateCustomerPending) {
 
 export function* getCustomer(action: GetCustomerPending) {
   try {
-    const response: CustomerResponse = yield call(getCustomerApi, action.payload);
+    const response: CustomerResponse = yield call(
+      getCustomerApi,
+      action.payload
+    );
     yield put(getCustomerSuccess(response));
   } catch (error: any) {
     yield put(getCustomerFailure(error));
@@ -44,7 +65,10 @@ export function* getCustomer(action: GetCustomerPending) {
 
 export function* getCustomerById(action: GetCustomerByIdPending) {
   try {
-    const response: CustomerEntity = yield call(getCustomerByIdApi, action.payload);
+    const response: CustomerEntity = yield call(
+      getCustomerByIdApi,
+      action.payload
+    );
     yield put(getCustomerByIdSuccess(response));
   } catch (error: any) {
     yield put(getCustomerByIdFailure(error));
@@ -53,7 +77,10 @@ export function* getCustomerById(action: GetCustomerByIdPending) {
 
 export function* updateCustomer(action: UpdateCustomerPending) {
   try {
-    const response: CustomerEntity = yield call(updateCustomerApi, action.payload);
+    const response: CustomerEntity = yield call(
+      updateCustomerApi,
+      action.payload
+    );
     yield put(updateCustomerSuccess(response));
   } catch (error: any) {
     yield put(updateCustomerFailure(error));
@@ -62,7 +89,10 @@ export function* updateCustomer(action: UpdateCustomerPending) {
 
 export function* deleteCustomer(action: DeleteCustomerPending) {
   try {
-    const response: CustomerEntity = yield call(deleteCustomerApi, action.payload);
+    const response: CustomerEntity = yield call(
+      deleteCustomerApi,
+      action.payload
+    );
     yield put(deleteCustomerSuccess(response));
   } catch (error: any) {
     yield put(deleteCustomerFailure(error));

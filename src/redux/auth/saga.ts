@@ -1,36 +1,52 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getProfile, loginUser, logoutUser, registrationUser, updateProfile } from '../../dataService/authApi';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { call, put, takeLatest } from "redux-saga/effects";
+import {
+  getProfile,
+  loginUser,
+  logoutUser,
+  registrationUser,
+  updateProfile,
+} from "../../dataService/authApi";
 
 import {
-  loginPending,
-  loginSuccess,
-  loginFailure,
-  registrationPending,
-  registrationSuccess,
-  registrationFailure,
-  logoutPending,
-  logoutSuccess,
-  logoutFailure,
-  updateProfileRequest,
-  updateProfileSuccess,
-  updateProfileFailure,
   checkAuthFailure,
-  checkAuthSuccess,
   checkAuthPending,
-  getProfileSuccess,
+  checkAuthSuccess,
   getProfileFailure,
   getProfilePending,
-} from '../auth/reducer';
-import { LoginPending, LogoutResponse, RegistrationPending, RegistrationResponse, UpdateProfilePending, User } from './type';
+  getProfileSuccess,
+  loginFailure,
+  loginPending,
+  loginSuccess,
+  logoutFailure,
+  logoutPending,
+  logoutSuccess,
+  registrationFailure,
+  registrationPending,
+  registrationSuccess,
+  updateProfileFailure,
+  updateProfileRequest,
+  updateProfileSuccess,
+} from "../auth/reducer";
+import {
+  LoginPending,
+  LogoutResponse,
+  RegistrationPending,
+  RegistrationResponse,
+  UpdateProfilePending,
+  User,
+} from "./type";
 
 export function* handleLogin(action: LoginPending) {
   try {
-    const expiryTime = new Date().getTime() + 30*60*1000;
-    const response: RegistrationResponse = yield call(loginUser, action.payload);
+    const expiryTime = new Date().getTime() + 30 * 60 * 1000;
+    const response: RegistrationResponse = yield call(
+      loginUser,
+      action.payload
+    );
     const { user, token } = response;
-    yield call(AsyncStorage.setItem, 'token', token);
-    yield call(AsyncStorage.setItem, 'expiryTime', expiryTime.toString());
+    yield call(AsyncStorage.setItem, "token", token);
+    yield call(AsyncStorage.setItem, "expiryTime", expiryTime.toString());
     yield put(loginSuccess({ user, token }));
   } catch (error: any) {
     yield put(loginFailure(error));
@@ -39,9 +55,12 @@ export function* handleLogin(action: LoginPending) {
 
 export function* handleRegistration(action: RegistrationPending) {
   try {
-    const response: RegistrationResponse = yield call(registrationUser, action.payload);
+    const response: RegistrationResponse = yield call(
+      registrationUser,
+      action.payload
+    );
     const { user, token } = response;
-    yield call(AsyncStorage.setItem, 'token', token);
+    yield call(AsyncStorage.setItem, "token", token);
     yield put(registrationSuccess({ user, token }));
   } catch (error: any) {
     yield put(registrationFailure(error));
@@ -51,8 +70,8 @@ export function* handleRegistration(action: RegistrationPending) {
 export function* handleLogout() {
   try {
     const response: LogoutResponse = yield call(logoutUser);
-    const { message, error  } = response;
-    yield call(AsyncStorage.removeItem, 'token');
+    const { message, error } = response;
+    yield call(AsyncStorage.removeItem, "token");
     yield put(logoutSuccess({ message, error }));
   } catch (error: any) {
     yield put(logoutFailure(error));
@@ -61,10 +80,10 @@ export function* handleLogout() {
 
 export function* handleCheckAuth() {
   try {
-    const token: string = yield call(AsyncStorage.getItem, 'token');
+    const token: string = yield call(AsyncStorage.getItem, "token");
     yield put(checkAuthSuccess({ token }));
   } catch (error: any) {
-    const token: string | null  = yield call(AsyncStorage.removeItem, 'token');
+    const token: string | null = yield call(AsyncStorage.removeItem, "token");
     yield put(checkAuthFailure({ token }));
   }
 }

@@ -1,55 +1,78 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ActivityIndicator } from 'react-native';
-import { Formik } from 'formik';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { useAppDispatch, useAppSelector } from '../../redux/store';
-import { displayErrorMessage } from '../../dataService/error';
-import { actions, selectors } from '../../redux/rootReducer';
-import { RootStackParamList } from '../../navigation/AppNavigator';
-import { FormItem } from '../RegistrationScreen/type';
+import { useNavigation } from "@react-navigation/native";
+import { Formik } from "formik";
+import React, { useState } from "react";
+import {
+  ActivityIndicator,
+  Button,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+import { displayErrorMessage } from "../../dataService/error";
+import { SCREEN } from "../../navigation/enum";
+import { actions, selectors } from "../../redux/rootReducer";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
+import { FormItem } from "../RegistrationScreen/type";
 
-type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
-
-type Props = {
-  navigation: LoginScreenNavigationProp;
-};
+interface Props {}
 
 const LoginScreen: React.FC<Props> = (props) => {
-  const { navigation } = props;
-  const dispatch = useAppDispatch()
-  const { loading, error } = useAppSelector(selectors.selectAuth)
-  const [formItem, setFormItem] = useState<Pick<FormItem, 'username' | 'password'>>({ username: '', password: '' })
+  // const screenNavigation = useNavigation<ScreenNavigationProp>();
+  // const tabNavigation = useNavigation<TabNavigationProp>();
+  const screenNavigation = useNavigation<any>();
+  const tabNavigation = useNavigation<any>();
+  const dispatch = useAppDispatch();
+  const { loading, error } = useAppSelector(selectors.selectAuth);
+  const [formItem, setFormItem] = useState<
+    Pick<FormItem, "username" | "password">
+  >({ username: "", password: "" });
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Login</Text>
-      {error && <Text style={styles.displayErrorText}>{displayErrorMessage(error) ?? ''}</Text>}
+      {error && (
+        <Text style={styles.displayErrorText}>
+          {displayErrorMessage(error) ?? ""}
+        </Text>
+      )}
       <Formik
-        initialValues={{ username: '', password: '' }}
+        initialValues={{ username: "", password: "" }}
         onSubmit={async (values) => {
           await dispatch(actions.auth.loginPending(values));
-          navigation.navigate('Profile')
+          setTimeout(() => {
+            tabNavigation.navigate(SCREEN.PROFILE, {
+              screen: SCREEN.LOGIN,
+            });
+          }, 500);
         }}
         validate={(values) => {
-          setFormItem(values)
-          const errors = {} as Pick<FormItem, 'username' | 'password'>;
+          setFormItem(values);
+          const errors = {} as Pick<FormItem, "username" | "password">;
           if (!values.username) {
-            errors.username = 'Username is required';
+            errors.username = "Username is required";
           }
           if (!values.password) {
-            errors.password = 'Password is required';
+            errors.password = "Password is required";
           }
           return errors;
         }}
       >
-        {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+        {({
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          values,
+          errors,
+          touched,
+        }) => (
           <View style={styles.containerForm}>
             <TextInput
               placeholder="Username"
               style={styles.input}
               value={values.username}
-              onBlur={handleBlur('username')}
-              onChangeText={handleChange('username')}
+              onBlur={handleBlur("username")}
+              onChangeText={handleChange("username")}
               autoCapitalize="none"
             />
             {errors.username && touched.username && (
@@ -58,8 +81,8 @@ const LoginScreen: React.FC<Props> = (props) => {
             <TextInput
               placeholder="Password"
               style={styles.input}
-              onChangeText={handleChange('password')}
-              onBlur={handleBlur('password')}
+              onChangeText={handleChange("password")}
+              onBlur={handleBlur("password")}
               value={values.password}
               secureTextEntry
             />
@@ -67,9 +90,20 @@ const LoginScreen: React.FC<Props> = (props) => {
               <Text style={styles.errorText}>{errors.password}</Text>
             )}
 
-            {loading ? <ActivityIndicator /> : <Button title="Login" onPress={() => handleSubmit()} />}
+            {loading ? (
+              <ActivityIndicator />
+            ) : (
+              <Button title="Login" onPress={() => handleSubmit()} />
+            )}
             <View style={styles.button}>
-              <Button title="Don't have an account? Go to Registration" onPress={() => navigation.navigate('Registration')} />
+              <Button
+                title="Don't have an account? Go to Registration"
+                onPress={() =>
+                  screenNavigation.navigate(SCREEN.REGISTRATION, {
+                    screen: SCREEN.LOGIN,
+                  })
+                }
+              />
             </View>
           </View>
         )}
@@ -79,25 +113,25 @@ const LoginScreen: React.FC<Props> = (props) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', padding: 20 },
-  title: { fontSize: 24, marginBottom: 20, textAlign: 'center' },
+  container: { flex: 1, justifyContent: "center", padding: 20 },
+  title: { fontSize: 24, marginBottom: 20, textAlign: "center" },
   displayErrorText: {
-    color: 'red',
+    color: "red",
     marginBottom: 10,
     padding: 16,
-    textAlign: 'center'
+    textAlign: "center",
   },
   containerForm: {
     padding: 16,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     marginBottom: 10,
     padding: 10,
   },
   errorText: {
-    color: 'red',
+    color: "red",
     marginBottom: 10,
   },
   button: { marginTop: 15, marginBottom: 15 },

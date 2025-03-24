@@ -1,6 +1,29 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { CreateCustomerFailure, CreateCustomerPending, CreateCustomerSuccess, CustomerState, DeleteAllCustomerFailure, DeleteAllCustomerPending, DeleteAllCustomerSuccess, DeleteCustomerFailure, DeleteCustomerPending, DeleteCustomerSuccess, GetCustomerByIdFailure, GetCustomerByIdPending, GetCustomerByIdSuccess, GetCustomerFailure, GetCustomerPending, GetCustomerSuccess, UpdateAllCustomerFailure, UpdateAllCustomerPending, UpdateAllCustomerSuccess, UpdateCustomerFailure, UpdateCustomerPending, UpdateCustomerSuccess } from "./type";
 import { AppState } from "../store";
+import {
+  CreateCustomerFailure,
+  CreateCustomerPending,
+  CreateCustomerSuccess,
+  CustomerState,
+  DeleteAllCustomerFailure,
+  DeleteAllCustomerPending,
+  DeleteAllCustomerSuccess,
+  DeleteCustomerFailure,
+  DeleteCustomerPending,
+  DeleteCustomerSuccess,
+  GetCustomerByIdFailure,
+  GetCustomerByIdPending,
+  GetCustomerByIdSuccess,
+  GetCustomerFailure,
+  GetCustomerPending,
+  GetCustomerSuccess,
+  UpdateAllCustomerFailure,
+  UpdateAllCustomerPending,
+  UpdateAllCustomerSuccess,
+  UpdateCustomerFailure,
+  UpdateCustomerPending,
+  UpdateCustomerSuccess,
+} from "./type";
 
 const initialState: CustomerState = {
   data: {

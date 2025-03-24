@@ -1,68 +1,101 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ActivityIndicator } from 'react-native';
+import {
+  ActivityIndicator,
+  Button,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 
-import { Formik } from 'formik';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { useAppDispatch, useAppSelector } from '../../redux/store';
-import { registrationPending } from '../../redux/auth/reducer';
-import { actions, selectors } from '../../redux/rootReducer';
-import { RootStackParamList } from '../../navigation/AppNavigator';
+import { Formik } from "formik";
+import { actions, selectors } from "../../redux/rootReducer";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
 
-import { FormItem } from './type';
-import { displayErrorMessage } from '../../dataService/error';
+import { useNavigation } from "@react-navigation/native";
+import { displayErrorMessage } from "../../dataService/error";
+import { SCREEN } from "../../navigation/enum";
+import { FormItem } from "./type";
 
-type RegistrationScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Registration'>;
-
-type Props = {
-  navigation: RegistrationScreenNavigationProp;
-};
+interface Props {}
 
 const RegistrationScreen: React.FC<Props> = (props) => {
-  const { navigation } = props;
-  const dispatch = useAppDispatch()
-  const { loading, error } = useAppSelector(selectors.selectAuth)
-  const [formItem, setFormItem] = useState<FormItem>({ username: '', email: '', first_name: '', last_name: '', password: '', confirm_password: '' })
+  const navigation = useNavigation<any>();
+  const dispatch = useAppDispatch();
+  const { loading, error } = useAppSelector(selectors.selectAuth);
+  const [formItem, setFormItem] = useState<FormItem>({
+    username: "",
+    email: "",
+    first_name: "",
+    last_name: "",
+    password: "",
+    confirm_password: "",
+  });
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Registration</Text>
-      {error && <Text style={styles.displayErrorText}>{displayErrorMessage(error) ?? ''}</Text>}
+      {error && (
+        <Text style={styles.displayErrorText}>
+          {displayErrorMessage(error) ?? ""}
+        </Text>
+      )}
       <Formik
-        initialValues={{ username: '', email: '', first_name: '', last_name: '', password: '', confirm_password: '' }}
+        initialValues={{
+          username: "",
+          email: "",
+          first_name: "",
+          last_name: "",
+          password: "",
+          confirm_password: "",
+        }}
         onSubmit={async (values) => {
           await dispatch(actions.auth.registrationPending(values));
-          navigation.navigate('Login')
+          setTimeout(() => {
+            navigation.navigate(SCREEN.LOGIN, {
+              screen: SCREEN.REGISTRATION,
+            });
+          }, 500);
         }}
         validate={(values) => {
-          setFormItem(values)
+          setFormItem(values);
           const errors = {} as FormItem;
           if (!values.username) {
-            errors.username = 'Username is required';
+            errors.username = "Username is required";
           }
           if (!values.email) {
-            errors.email = 'Email is required';
-          } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
-            errors.email = 'Invalid email address';
+            errors.email = "Email is required";
+          } else if (
+            !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
+          ) {
+            errors.email = "Invalid email address";
           }
           if (!values.password) {
-            errors.password = 'Password is required';
+            errors.password = "Password is required";
           }
           if (!values.confirm_password) {
-            errors.confirm_password = 'Password is required';
+            errors.confirm_password = "Password is required";
           } else if (values.confirm_password !== values.password) {
-            errors.confirm_password = 'Passwords do not match.';
+            errors.confirm_password = "Passwords do not match.";
           }
           return errors;
         }}
       >
-        {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+        {({
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          values,
+          errors,
+          touched,
+        }) => (
           <View style={styles.containerForm}>
             <TextInput
               placeholder="Username"
               style={styles.input}
               value={values.username}
-              onBlur={handleBlur('username')}
-              onChangeText={handleChange('username')}
+              onBlur={handleBlur("username")}
+              onChangeText={handleChange("username")}
               autoCapitalize="none"
             />
             {errors.username && touched.username && (
@@ -73,8 +106,8 @@ const RegistrationScreen: React.FC<Props> = (props) => {
               placeholder="Email"
               style={styles.input}
               value={values.email}
-              onBlur={handleBlur('email')}
-              onChangeText={handleChange('email')}
+              onBlur={handleBlur("email")}
+              onChangeText={handleChange("email")}
               keyboardType="email-address"
               autoCapitalize="none"
             />
@@ -86,8 +119,8 @@ const RegistrationScreen: React.FC<Props> = (props) => {
               placeholder="First Name"
               style={styles.input}
               value={values.first_name}
-              onBlur={handleBlur('first_name')}
-              onChangeText={handleChange('first_name')}
+              onBlur={handleBlur("first_name")}
+              onChangeText={handleChange("first_name")}
               autoCapitalize="none"
             />
             {errors.first_name && touched.first_name && (
@@ -98,8 +131,8 @@ const RegistrationScreen: React.FC<Props> = (props) => {
               placeholder="Last Name"
               style={styles.input}
               value={values.last_name}
-              onBlur={handleBlur('last_name')}
-              onChangeText={handleChange('last_name')}
+              onBlur={handleBlur("last_name")}
+              onChangeText={handleChange("last_name")}
               autoCapitalize="none"
             />
             {errors.last_name && touched.last_name && (
@@ -109,8 +142,8 @@ const RegistrationScreen: React.FC<Props> = (props) => {
             <TextInput
               placeholder="Password"
               style={styles.input}
-              onChangeText={handleChange('password')}
-              onBlur={handleBlur('password')}
+              onChangeText={handleChange("password")}
+              onBlur={handleBlur("password")}
               value={values.password}
               secureTextEntry
             />
@@ -121,8 +154,8 @@ const RegistrationScreen: React.FC<Props> = (props) => {
             <TextInput
               placeholder="Confirm password"
               style={styles.input}
-              onChangeText={handleChange('confirm_password')}
-              onBlur={handleBlur('confirm_password')}
+              onChangeText={handleChange("confirm_password")}
+              onBlur={handleBlur("confirm_password")}
               value={values.confirm_password}
               secureTextEntry
             />
@@ -130,9 +163,20 @@ const RegistrationScreen: React.FC<Props> = (props) => {
               <Text style={styles.errorText}>{errors.confirm_password}</Text>
             )}
 
-            {loading ? <ActivityIndicator /> : <Button title="Register" onPress={() => handleSubmit()} />}
+            {loading ? (
+              <ActivityIndicator />
+            ) : (
+              <Button title="Register" onPress={() => handleSubmit()} />
+            )}
             <View style={styles.button}>
-              <Button title="Already have an account? Login" onPress={() => navigation.navigate('Login')} />
+              <Button
+                title="Already have an account? Login"
+                onPress={() =>
+                  navigation.navigate(SCREEN.LOGIN, {
+                    screen: SCREEN.REGISTRATION,
+                  })
+                }
+              />
             </View>
           </View>
         )}

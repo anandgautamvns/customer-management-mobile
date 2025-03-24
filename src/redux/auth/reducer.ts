@@ -1,7 +1,28 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { AppState } from '../store';
-import { CheckAuthFailure, CheckAuthPending, CheckAuthSuccess, LoginFailure, LoginPending, LoginSuccess, LogoutFailure, LogoutPending, LogoutSuccess, ProfileFailure, ProfilePending, ProfileSuccess, RegistrationFailure, RegistrationPending, RegistrationSuccess, UpdateProfileFailure, UpdateProfilePending, UpdateProfileSuccess, User } from './type';
-import { APIError } from '../type';
+import { createSlice } from "@reduxjs/toolkit";
+import { AppState } from "../store";
+import { APIError } from "../type";
+import promiseAction from "../utils";
+import {
+  CheckAuthFailure,
+  CheckAuthPending,
+  CheckAuthSuccess,
+  LoginFailure,
+  LoginPending,
+  LoginSuccess,
+  LogoutFailure,
+  LogoutPending,
+  LogoutSuccess,
+  ProfileFailure,
+  ProfilePending,
+  ProfileSuccess,
+  RegistrationFailure,
+  RegistrationPending,
+  RegistrationSuccess,
+  UpdateProfileFailure,
+  UpdateProfilePending,
+  UpdateProfileSuccess,
+  User,
+} from "./type";
 
 interface AuthState {
   user: User | null;
@@ -18,14 +39,14 @@ const initialState: AuthState = {
 };
 
 const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
     // Login Actions
     loginPending(state, action: LoginPending) {
-      state.loading = true;
-      state.error = null;
+      return { ...state, loading: true, error: null };
     },
+
     loginSuccess(state, action: LoginSuccess) {
       state.user = action.payload.user;
       state.token = action.payload.token;
@@ -39,7 +60,7 @@ const authSlice = createSlice({
     // Registration Actions
     registrationPending(state, action: RegistrationPending) {
       const payload = action.payload;
-      const type = action.type
+      const type = action.type;
       state.loading = true;
       state.error = null;
     },
@@ -80,7 +101,7 @@ const authSlice = createSlice({
       state.error = action.payload;
     },
 
-     // Registration Actions
+    // Registration Actions
     getProfilePending(state, action: ProfilePending) {
       state.loading = true;
       state.error = null;
@@ -130,9 +151,10 @@ export const {
   updateProfileSuccess,
   updateProfileFailure,
 } = authSlice.actions;
+export const loginPendingPromise = promiseAction(loginPending);
 
 export const authSelectors = {
-  selectAuth: (state: AppState) => state.auth
-}
+  selectAuth: (state: AppState) => state.auth,
+};
 
 export default authSlice;

@@ -1,55 +1,49 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, StyleSheet, ActivityIndicator } from 'react-native';
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 
-import { Button, IconButton, MD3Colors, Checkbox, PaperProvider, MD2Colors } from 'react-native-paper';
-import { Formik } from 'formik';
-import { useAppDispatch, useAppSelector } from '../../redux/store';
-import { actions, selectors } from '../../redux/rootReducer';
-import { FormItem } from '../RegistrationScreen/type';
-import { displayErrorMessage } from '../../dataService/error';
-import { RootStackParamList } from '../../navigation/AppNavigator';
-import { StackNavigationProp } from '@react-navigation/stack';
-import CustomCard from '../../components/Card';
+import { Formik } from "formik";
+import { Button } from "react-native-paper";
+import CustomCard from "../../components/Card";
+import { displayErrorMessage } from "../../dataService/error";
+import { actions, selectors } from "../../redux/rootReducer";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
+import { FormItem } from "../RegistrationScreen/type";
 
-type RegistrationScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
-type Props = {
-  navigation: RegistrationScreenNavigationProp;
-};
-
+interface Props {}
 const ProfileScreen: React.FC<Props> = (props) => {
-  const { navigation } = props
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   const { loading, error, user } = useAppSelector(selectors.selectAuth);
-  const [isEdit, setEdit] = useState<boolean>(false)
-  const [formItem, setFormItem] = useState<Pick<FormItem, 'username' | 'email' | 'first_name' | 'last_name'>>({
-    username: user?.username ?? '',
-    email: user?.email ?? '',
-    first_name: user?.first_name ?? '',
-    last_name: user?.last_name ?? '',
-  })
-
-  console.log('profile', { loading, error, user })
+  const [isEdit, setEdit] = useState<boolean>(false);
+  const [formItem, setFormItem] = useState<
+    Pick<FormItem, "username" | "email" | "first_name" | "last_name">
+  >({
+    username: user?.username ?? "",
+    email: user?.email ?? "",
+    first_name: user?.first_name ?? "",
+    last_name: user?.last_name ?? "",
+  });
 
   useEffect(() => {
-    dispatch(actions.auth.getProfilePending())
-  }, [])
+    dispatch(actions.auth.getProfilePending());
+  }, []);
 
   useEffect(() => {
     if (user) {
       setFormItem((pre) => ({
         ...pre,
-        username: user?.username ?? '',
-        email: user?.email ?? '',
-        first_name: user?.first_name ?? '',
-        last_name: user?.last_name ?? '',
-      }))
+        username: user?.username ?? "",
+        email: user?.email ?? "",
+        first_name: user?.first_name ?? "",
+        last_name: user?.last_name ?? "",
+      }));
     }
-  }, [user])
-
-  const handleLogout = async () => {
-    await dispatch(actions.auth.logoutPending())
-    navigation.navigate('Login')
-  }
+  }, [user]);
 
   return (
     <View style={styles.container}>
@@ -57,36 +51,59 @@ const ProfileScreen: React.FC<Props> = (props) => {
       <View style={styles.detailsContainer}>
         {isEdit ? (
           <View>
-            {error && <Text style={styles.displayErrorText}>{displayErrorMessage(error) ?? ''}</Text>}
+            {error && (
+              <Text style={styles.displayErrorText}>
+                {displayErrorMessage(error) ?? ""}
+              </Text>
+            )}
             <Formik
-              initialValues={{ username: formItem.username, email: formItem.email, first_name: formItem.first_name, last_name: formItem.last_name }}
+              initialValues={{
+                username: formItem.username,
+                email: formItem.email,
+                first_name: formItem.first_name,
+                last_name: formItem.last_name,
+              }}
               onSubmit={async (values) => {
                 await dispatch(actions.auth.updateProfileRequest(values));
-                dispatch(actions.auth.getProfilePending())
-                setEdit(false)
+                setTimeout(() => {
+                  dispatch(actions.auth.getProfilePending());
+                  setEdit(false);
+                }, 500);
               }}
               validate={(values) => {
-                setFormItem(values)
-                const errors = {} as Pick<FormItem, 'username' | 'email' | 'first_name' | 'last_name'>;
+                setFormItem(values);
+                const errors = {} as Pick<
+                  FormItem,
+                  "username" | "email" | "first_name" | "last_name"
+                >;
                 if (!values.username) {
-                  errors.username = 'Username is required';
+                  errors.username = "Username is required";
                 }
                 if (!values.email) {
-                  errors.email = 'Email is required';
-                } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
-                  errors.email = 'Invalid email address';
+                  errors.email = "Email is required";
+                } else if (
+                  !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
+                ) {
+                  errors.email = "Invalid email address";
                 }
                 return errors;
               }}
             >
-              {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+              {({
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                values,
+                errors,
+                touched,
+              }) => (
                 <View style={styles.containerForm}>
                   <TextInput
                     placeholder="Username"
                     style={styles.input}
                     value={values.username}
-                    onBlur={handleBlur('username')}
-                    onChangeText={handleChange('username')}
+                    onBlur={handleBlur("username")}
+                    onChangeText={handleChange("username")}
                     autoCapitalize="none"
                   />
                   {errors.username && touched.username && (
@@ -97,8 +114,8 @@ const ProfileScreen: React.FC<Props> = (props) => {
                     placeholder="Email"
                     style={styles.input}
                     value={values.email}
-                    onBlur={handleBlur('email')}
-                    onChangeText={handleChange('email')}
+                    onBlur={handleBlur("email")}
+                    onChangeText={handleChange("email")}
                     keyboardType="email-address"
                     autoCapitalize="none"
                   />
@@ -110,8 +127,8 @@ const ProfileScreen: React.FC<Props> = (props) => {
                     placeholder="First Name"
                     style={styles.input}
                     value={values.first_name}
-                    onBlur={handleBlur('first_name')}
-                    onChangeText={handleChange('first_name')}
+                    onBlur={handleBlur("first_name")}
+                    onChangeText={handleChange("first_name")}
                     autoCapitalize="none"
                   />
                   {errors.first_name && touched.first_name && (
@@ -122,15 +139,21 @@ const ProfileScreen: React.FC<Props> = (props) => {
                     placeholder="Last Name"
                     style={styles.input}
                     value={values.last_name}
-                    onBlur={handleBlur('last_name')}
-                    onChangeText={handleChange('last_name')}
+                    onBlur={handleBlur("last_name")}
+                    onChangeText={handleChange("last_name")}
                     autoCapitalize="none"
                   />
                   {errors.last_name && touched.last_name && (
                     <Text style={styles.errorText}>{errors.last_name}</Text>
                   )}
 
-                  {loading ? <ActivityIndicator /> : <Button onPress={() => handleSubmit()}>Update Profile</Button>}
+                  {loading ? (
+                    <ActivityIndicator />
+                  ) : (
+                    <Button onPress={() => handleSubmit()}>
+                      Update Profile
+                    </Button>
+                  )}
                 </View>
               )}
             </Formik>
@@ -154,7 +177,11 @@ const ProfileScreen: React.FC<Props> = (props) => {
                     <Text>{formItem.last_name}</Text>
                   </View>
                   <View style={styles.contentWrapper}>
-                    <Button icon="account" mode="contained" onPress={() => setEdit(true)}>
+                    <Button
+                      icon="account"
+                      mode="contained"
+                      onPress={() => setEdit(true)}
+                    >
                       Update Profile
                     </Button>
                   </View>

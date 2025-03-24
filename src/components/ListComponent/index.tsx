@@ -1,7 +1,7 @@
-import React from 'react';
-import { View, FlatList, StyleSheet, Text, StatusBar } from 'react-native';
-import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
-import { ListItemEntity } from './type';
+import React from "react";
+import { FlatList, StatusBar, StyleSheet } from "react-native";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { ListItemEntity } from "./type";
 
 const ListComponent: React.FC<ListItemEntity<any>> = (props) => {
   const { data, renderItem } = props;
@@ -11,11 +11,11 @@ const ListComponent: React.FC<ListItemEntity<any>> = (props) => {
         <FlatList
           data={data}
           renderItem={renderItem}
-          keyExtractor={item => item.id}
+          keyExtractor={(item) => item.id}
         />
       </SafeAreaView>
     </SafeAreaProvider>
-  )
+  );
 };
 
 const styles = StyleSheet.create({
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     marginTop: StatusBar.currentHeight || 0,
   },
   item: {
-    backgroundColor: '#f9c2ff',
+    backgroundColor: "#f9c2ff",
     padding: 20,
     marginVertical: 8,
     marginHorizontal: 16,

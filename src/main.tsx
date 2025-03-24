@@ -1,16 +1,13 @@
-import React, { useEffect } from 'react';
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
-import AppNavigator, { RootStackParamList } from './navigation/AppNavigator';
-import { useAppDispatch, useAppSelector } from './redux/store';
-import { actions, selectors } from './redux/rootReducer';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { StackNavigationProp } from '@react-navigation/stack';
-
-type RegistrationScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { NavigationContainer } from "@react-navigation/native";
+import React, { useEffect } from "react";
+import AppNavigator from "./navigation/AppNavigator";
+import { actions, selectors } from "./redux/rootReducer";
+import { useAppDispatch, useAppSelector } from "./redux/store";
 
 const Main: React.FC = () => {
-  const dispatch = useAppDispatch()
-  const { token } = useAppSelector(selectors.selectAuth)
+  const dispatch = useAppDispatch();
+  const { token } = useAppSelector(selectors.selectAuth);
   // const navigation = useNavigation<RegistrationScreenNavigationProp>()
 
   useEffect(() => {
@@ -19,11 +16,11 @@ const Main: React.FC = () => {
 
   const isSessionExpired = async () => {
     try {
-      const expiryTime = await AsyncStorage.getItem('expiryTime');
+      const expiryTime = await AsyncStorage.getItem("expiryTime");
       if (!expiryTime) return true;
       return new Date().getTime() > parseInt(expiryTime, 10);
     } catch (error) {
-      console.error('Error checking session expiry:', error);
+      console.error("Error checking session expiry:", error);
       return true;
     }
   };
@@ -32,7 +29,7 @@ const Main: React.FC = () => {
     const expired = await isSessionExpired();
     if (expired) {
       // navigation.navigate('Login')
-      await AsyncStorage.removeItem('token');
+      await AsyncStorage.removeItem("token");
     }
   };
 
@@ -45,4 +42,4 @@ const Main: React.FC = () => {
   );
 };
 
-export default Main
+export default Main;

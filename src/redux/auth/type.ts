@@ -1,7 +1,12 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 import { APIError } from "../type";
 
-export type LoginPending = PayloadAction<Pick<RegistrationRequest, 'username' | 'password'>>
+export type LoginPending1 = Promise<
+  PayloadAction<Pick<RegistrationRequest, "username" | "password">>
+>;
+export type LoginPending = PayloadAction<
+  Pick<RegistrationRequest, "username" | "password">
+>;
 export type LoginSuccess = PayloadAction<RegistrationResponse>
 export type LoginFailure = PayloadAction<APIError | null>
 

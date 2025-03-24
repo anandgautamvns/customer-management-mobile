@@ -1,6 +1,6 @@
-import { AxiosError, AxiosResponse } from "axios"
+import { AxiosError, AxiosResponse } from "axios";
 
-export type APIResponse<T> = AxiosResponse<T>
+export type APIResponse<T> = AxiosResponse<T>;
 
 export type APIError = AxiosError;
 
@@ -8,8 +8,8 @@ export type PagableResponse<T> = {
   count: number;
   next: string | null;
   previous: string | null;
-  results: T[]
-}
+  results: T[];
+};
 
 export interface PagableParams {
   search: string;

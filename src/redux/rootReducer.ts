@@ -16,4 +16,4 @@ const selectors = {
   ...customerSelectors
 }
 
-export { actions, reducers, selectors }
+export { actions, reducers, selectors };
