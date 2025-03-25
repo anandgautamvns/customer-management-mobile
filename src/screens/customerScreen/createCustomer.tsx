@@ -6,6 +6,7 @@ import { Alert, Modal, StyleSheet, Text, TextInput, View } from "react-native";
 import { ActivityIndicator, Button, MD2Colors } from "react-native-paper";
 import RNPickerSelect from "react-native-picker-select";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { createCustomerAction, updateCustomerAction } from "../../dataService/customerApi";
 import { displayErrorMessage } from "../../dataService/error";
 import { Gender } from "../../redux-toolkit/customer/enum";
 import { CustomerEntity } from "../../redux-toolkit/customer/type";
@@ -63,12 +64,18 @@ const CreateCustomer: React.FC<Props> = (props) => {
           ...values,
           id: customerInfo.id,
         };
-        await dispatch(actions.customer.updateCustomerPending(payload));
-        setTimeout(() => {
-          setIsEdit(false);
-          setVisible(false);
-          setRefresh(true);
-        }, 500);
+        dispatch(updateCustomerAction(payload))
+          .then(() => {
+           setIsEdit(false);
+           setVisible(false);
+           setRefresh(true);
+          })
+          .catch((error) => {
+            console.log(error);
+            setIsEdit(false);
+            setVisible(false);
+            setRefresh(true);
+          });
       }
     } else {
       const payload: Omit<CustomerEntity, "id" | "created_at" | "modified_at"> =
@@ -76,12 +83,19 @@ const CreateCustomer: React.FC<Props> = (props) => {
           ...formItem,
           ...values,
         };
-      await dispatch(actions.customer.createCustomerPending(payload));
-      setTimeout(() => {
-        setIsEdit(false);
-        setVisible(false);
-        setRefresh(true);
-      }, 500);
+
+      dispatch(createCustomerAction(payload))
+        .then(() => {
+          setIsEdit(false);
+          setVisible(false);
+          setRefresh(true);
+        })
+        .catch((err) => {
+          console.log(err);
+          setIsEdit(false);
+          setVisible(false);
+          setRefresh(true);
+        });
     }
   };
   console.log("selected", { loading, error, data, customerInfo });

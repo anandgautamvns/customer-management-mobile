@@ -17,10 +17,16 @@ import { ScrollView } from "react-native-gesture-handler";
 import CustomCard from "../../components/Card";
 import ListComponent from "../../components/ListComponent";
 import {
+  deleteAllCustomerAction,
+  deleteCustomerAction,
+  getCustomerByIdAction,
+  getCustomersAction,
+} from "../../dataService/customerApi";
+import {
   CustomerEntity,
   CustomerRequest,
 } from "../../redux-toolkit/customer/type";
-import { actions, selectors } from "../../redux-toolkit/rootReducer";
+import { selectors } from "../../redux-toolkit/rootReducer";
 import { useAppDispatch, useAppSelector } from "../../redux-toolkit/store";
 import { defaultCustomerRequest } from "./constant";
 import CreateCustomer from "./createCustomer";
@@ -46,7 +52,7 @@ const CustomerScreen: React.FC<Props> = (props) => {
     const payload: CustomerRequest = {
       ...customerPayload,
     };
-    dispatch(actions.customer.getCustomerPending(payload));
+    dispatch(getCustomersAction(payload));
   };
 
   useEffect(() => {
@@ -69,11 +75,14 @@ const CustomerScreen: React.FC<Props> = (props) => {
 
   const debouncedSearch = useCallback(debounce(handleSearch, 100), []);
 
-  const handleDelete = async (item: CustomerEntity) => {
-    await dispatch(actions.customer.deleteCustomerPending({ id: item.id }));
-    setTimeout(() => {
-      fetchCustomer();
-    }, 500);
+  const handleDelete = (item: CustomerEntity) => {
+    dispatch(deleteCustomerAction({ id: item.id }))
+      .then(() => {
+        fetchCustomer();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const renderContent = (item: CustomerEntity) => (
@@ -96,14 +105,16 @@ const CustomerScreen: React.FC<Props> = (props) => {
               icon="eraser"
               iconColor={MD3Colors.primary50}
               size={20}
-              onPress={async () => {
-                await dispatch(
-                  actions.customer.getCustomerByIdPending({ id: item.id })
-                );
-                setTimeout(() => {
-                  setVisible(true);
-                  setIsEdit(true);
-                }, 500);
+              onPress={() => {
+                dispatch(getCustomerByIdAction({ id: item.id }))
+                  .then(() => {
+                    setVisible(true);
+                    setIsEdit(true);
+                  })
+                  .catch((error) => {
+                    setVisible(false);
+                    setIsEdit(false);
+                  });
               }}
             />
           </View>
@@ -174,10 +185,13 @@ const CustomerScreen: React.FC<Props> = (props) => {
               icon="account"
               mode="contained"
               onPress={async () => {
-                await dispatch(actions.customer.deleteAllCustomerPending());
-                setTimeout(() => {
-                  fetchCustomer();
-                }, 500);
+                dispatch(deleteAllCustomerAction())
+                  .then(() => {
+                    fetchCustomer();
+                  })
+                  .catch((error) => {
+                    fetchCustomer();
+                  });
               }}
             >
               DeleteAll
